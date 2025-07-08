@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Seleccionados | Mi Tienda de Afiliados</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tu hoja de estilos -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Productos Seleccionados para Ti</h1>
+        <p>Una cuidada selección de los Mejores Productos con las Mejores Ofertas actualmente en Amazon.</p>
+    </header>
+
+    <main>
+        <!-- Filtros por Categoría -->
+        <div id="filters" class="filter-container">
+            <button class="filter-btn active" data-category="all">
+                <i class="fas fa-star"></i> Todos
+            </button>
+            <button class="filter-btn" data-category="electronica">
+                <i class="fas fa-laptop"></i> Electrónica
+            </button>
+            <button class="filter-btn" data-category="hogar">
+                <i class="fas fa-home"></i> Hogar
+            </button>
+            <button class="filter-btn" data-category="libros">
+                <i class="fas fa-book"></i> Libros
+            </button>
+        </div>
+
+        <!-- Cuadrícula de Productos (se llenará con JavaScript) -->
+        <div id="product-grid" class="product-grid">
+            <!-- Las tarjetas de producto se insertarán aquí -->
+        </div>
+    </main>
+
+    <footer>
+        <p>Como Asociado de Amazon, obtengo ingresos por las compras adscritas que cumplen los requisitos aplicables. <a href="https://www.amazon.es/asociados" target="_blank" rel="noopener noreferrer">Más información</a>.</p>
+        <p>&copy; 2025 Game and Software Solutions</p>
+    </footer>
+
+    <!-- Tu script de JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

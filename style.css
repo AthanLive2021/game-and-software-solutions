@@ -1,0 +1,161 @@
+/* --- Variables Globales (para personalizar fácilmente) --- */
+:root {
+    --primary-color: #1a1a1a;        /* Color principal para texto */
+    --secondary-color: #6c757d;    /* Color secundario para texto y detalles */
+    --background-color: #f8f9fa;   /* Color de fondo de la página */
+    --card-background-color: #ffffff;/* Color de fondo de las tarjetas */
+    --button-color: #007bff;         /* Color del botón principal */
+    --button-hover-color: #0056b3;  /* Color del botón al pasar el ratón */
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* --- Reseteo y Estilos Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    line-height: 1.6;
+}
+
+/* --- Contenedores Principales --- */
+header, main, footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+header h1 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+}
+
+footer {
+    border-top: 1px solid #e9ecef;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* --- Filtros de Categoría --- */
+.filter-container {
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 0.5rem 1.2rem;
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--secondary-color);
+}
+
+.filter-btn i {
+    margin-right: 0.5rem;
+}
+
+.filter-btn:hover {
+    background-color: #e9ecef;
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+
+/* --- Cuadrícula de Productos --- */
+.product-grid {
+    display: grid;
+    /* Columnas responsive: se adaptan al ancho disponible */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+/* --- Tarjeta de Producto --- */
+.product-card {
+    background-color: var(--card-background-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover sutil */
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain; /* Evita que la imagen se deforme */
+}
+
+.product-info {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.product-info .price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.product-info .amazon-button {
+    display: inline-block;
+    background-color: var(--button-color);
+    color: white;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: auto; /* Empuja el botón hacia abajo */
+    transition: background-color 0.3s ease;
+}
+
+.product-info .amazon-button:hover {
+    background-color: var(--button-hover-color);
+}
