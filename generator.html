@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Productos de Amazon</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f0f2f5; color: #333; max-width: 800px; margin: 2rem auto; padding: 2rem; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1, h2 { text-align: center; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        input, select, textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
+        textarea { height: 250px; font-family: 'Courier New', Courier, monospace; background-color: #f4f4f4; color: #333; }
+        button { display: block; width: 100%; padding: 1rem; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 1.2rem; cursor: pointer; transition: background-color 0.3s; }
+        button:hover { background-color: #0056b3; }
+        .highlight { color: #d9534f; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Productos de Amazon</h1>
+
+    <div class="form-group">
+        <label for="affiliateTag">Tu ID de Asociado de Amazon <span class="highlight">(ej: mitienda-21)</span></label>
+        <input type="text" id="affiliateTag" placeholder="Escribe aquí tu tag de seguimiento">
+    </div>
+
+    <div class="form-group">
+        <label for="productUrl">URL Completa del Producto en Amazon</label>
+        <input type="text" id="productUrl" placeholder="Pega aquí la URL completa del producto">
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <label for="name">Nombre del Producto</label>
+        <input type="text" id="name" placeholder="Ej: Echo Dot (5ª gen.)">
+    </div>
+
+    <div class="form-group">
+        <label for="image">URL de la Imagen Principal</label>
+        <input type="text" id="image" placeholder="Haz clic derecho en la imagen del producto -> Copiar dirección de imagen">
+    </div>
+    
+    <div class="form-group">
+        <label for="finalPrice">Precio Final (ej: US$ 160.76)</label>
+        <input type="text" id="finalPrice" placeholder="El precio que paga el cliente">
+    </div>
+
+    <div class="form-group">
+        <label for="originalPrice">Precio Original (Opcional, para tachar)</label>
+        <input type="text" id="originalPrice" placeholder="Déjalo en blanco si no hay oferta">
+    </div>
+    
+    <div class="form-group">
+        <label for="discount">Porcentaje de Descuento (Opcional, ej: -46%)</label>
+        <input type="text" id="discount" placeholder="Déjalo en blanco si no hay oferta">
+    </div>
+
+    <div class="form-group">
+        <label for="offerTag">Etiqueta de Oferta (Opcional, ej: Oferta del Día)</label>
+        <input type="text" id="offerTag" placeholder="Déjalo en blanco si no hay etiqueta">
+    </div>
+    
+    <div class="form-group">
+        <label for="category">Categoría (¡Tú la defines!)</label>
+        <select id="category">
+            <option value="gaming">Gaming</option>
+            <option value="productividad">Productividad</option>
+            <option value="libros">Libros</option>
+            <!-- Puedes añadir más categorías aquí editando el HTML -->
+        </select>
+    </div>
+
+    <button id="generateBtn">Generar Código</button>
+
+    <h2>Código listo para copiar:</h2>
+    <div class="form-group">
+        <textarea id="output" readonly></textarea>
+    </div>
+
+    <script>
+        const generateBtn = document.getElementById('generateBtn');
+        const output = document.getElementById('output');
+
+        generateBtn.addEventListener('click', () => {
+            const affiliateTag = document.getElementById('affiliateTag').value.trim();
+            const productUrl = document.getElementById('productUrl').value.trim();
+
+            if (!affiliateTag || !productUrl) {
+                alert('¡Por favor, introduce tu ID de Asociado y la URL del producto!');
+                return;
+            }
+            
+            // Construir el enlace de afiliado correctamente
+            const url = new URL(productUrl);
+            url.searchParams.set('tag', affiliateTag);
+            const affiliateLink = url.toString();
+            
+            // Recoger los demás valores
+            const name = document.getElementById('name').value.trim();
+            const image = document.getElementById('image').value.trim();
+            const finalPrice = document.getElementById('finalPrice').value.trim();
+            const originalPrice = document.getElementById('originalPrice').value.trim();
+            const discount = document.getElementById('discount').value.trim();
+            const offerTag = document.getElementById('offerTag').value.trim();
+            const category = document.getElementById('category').value;
+            
+            // Generar el objeto de producto con formato
+            const productObject = `
+    {
+        name: "${name}",
+        image: "${image}",
+        price: "${finalPrice}",
+        originalPrice: "${originalPrice}",
+        discount: "${discount}",
+        offerTag: "${offerTag}",
+        link: "${affiliateLink}",
+        category: "${category}"
+    },`;
+            
+            output.value = productObject.trim();
+        });
+    </script>
+</body>
+</html>
