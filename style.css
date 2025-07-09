@@ -123,11 +123,13 @@ footer a {
     object-fit: contain; /* Evita que la imagen se deforme */
 }
 
-.product-info {
+ .product-info {
     padding: 1.5rem;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    text-align: left;
+    width: auto;  /* <-- Agrega esto al product-info si no se muestra correcto */
 }
 
 .product-info h3 {
@@ -158,4 +160,52 @@ footer a {
 
 .product-info .amazon-button:hover {
     background-color: var(--button-hover-color);
+}
+
+/* --- NUEVOS ESTILOS PARA LA SECCIÓN DE PRECIOS DE OFERTA --- */
+
+/* Contenedor de la etiqueta de oferta */
+.offer-tag {
+    background-color: #CC0C39; /* Rojo de oferta de Amazon */
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-block; /* Para que solo ocupe el espacio necesario */
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+
+/* Contenedor principal de los precios para alineación */
+.price-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+    flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si no caben */
+    margin-bottom: 1.2rem; /* Espacio antes del botón de Amazon */
+    gap: 0.6rem; /* Espacio entre los elementos de precio */
+}
+
+/* Porcentaje de descuento (ej: -46%) */
+.discount-percentage {
+    font-size: 1.8rem; /* Tamaño grande para llamar la atención */
+    font-weight: 500;
+    color: #007600; /* Tono de verde similar a Amazon */
+}
+
+/* Precio final (ej: US$ 160.76) */
+.final-price {
+    font-size: 1.8rem; /* El precio final es lo más grande */
+    font-weight: 700;
+    color: var(--primary-color); /* Usa el color principal del texto (negro/gris oscuro) */
+}
+
+/* Precio original tachado */
+.original-price {
+    font-size: 0.9rem;
+    color: var(--secondary-color); /* Usa el color de texto secundario (gris) */
+}
+
+.original-price s {
+    text-decoration: line-through; /* Esto crea el efecto tachado */
 }
