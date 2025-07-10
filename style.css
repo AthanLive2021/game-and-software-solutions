@@ -209,3 +209,211 @@ footer a {
 .original-price s {
     text-decoration: line-through; /* Esto crea el efecto tachado */
 }
+
+/* --- NUEVOS ESTILOS PARA EL CARRITO DE COMPRAS --- */
+
+/* Contenedor del icono del carrito en el header */
+.cart-icon-container {
+    position: fixed; /* Lo fijamos en la pantalla */
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    background: white;
+    padding: 10px 15px;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.cart-icon-container:hover {
+    transform: scale(1.1);
+}
+
+/* Contador de artículos en el carrito (la burbuja roja) */
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #CC0C39;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Fondo oscuro semitransparente para el modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex; /* Se muestra con JS */
+}
+
+/* Ventana del carrito (modal) */
+.modal-content {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 600px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header, .modal-footer {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
+.modal-body {
+    padding: 1rem 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Estilo de cada producto dentro del carrito */
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+.cart-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-right: 1rem;
+    border-radius: 8px;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+}
+.cart-item-info h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+.cart-item-info p {
+    margin: 0;
+    font-weight: 600;
+    color: #007600;
+}
+
+.modal-footer {
+    border-bottom: none;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.export-btn {
+    background-color: #1D6F42; /* Verde de Excel */
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+.export-btn:hover {
+    background-color: #165934;
+}
+
+/* --- ESTILOS DEFINITIVOS PARA LOS CONTROLES DEL CARRITO --- */
+
+/* El contenedor que alinea el selector y el botón */
+.add-to-cart-controls {
+    display: flex;
+    margin-top: 1rem;
+    gap: 0.5rem; /* Espacio entre el selector y el botón */
+}
+
+/* El <select> que se ve como el menú desplegable de Amazon */
+.quantity-input {
+    /* Reseteo de apariencia */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Estilo visual */
+    width: 140px; /* Ancho fijo para el texto "Cantidad: X" */
+    padding: 0.8rem 1rem;
+    border: 1px solid #C7C7C7;
+    border-radius: 8px;
+    background-color: #f0f2f5;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+
+    /* Flecha desplegable personalizada */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1em;
+}
+
+/* Eliminación del contorno azul al hacer clic (foco) */
+.quantity-input:focus {
+    outline: none;
+    border-color: #007185;
+    box-shadow: 0 0 0 2px #C8F3FA;
+}
+
+/* Botón de "Añadir al Pedido" */
+.add-to-cart-btn {
+    flex-grow: 1; /* Ocupa el espacio restante */
+    background-color: #e9ecef;
+    color: var(--primary-color);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 0; /* Ya no lo necesita */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}

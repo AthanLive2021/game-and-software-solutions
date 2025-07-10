@@ -21,6 +21,10 @@
     <header>
         <h1>Mejores Ofertas en Productos de Computacion y Electrónica</h1>
         <p>Una cuidadosa selección de los Mejores Productos con las Mejores Ofertas actualmente en Amazon para que puedas Construir tu PC con la mejor relacion Calidad-Precio del mercado.</p>
+        <div class="cart-icon-container">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count" class="cart-count">0</span>
+        </div>
     </header>
 
     <main>
@@ -49,6 +53,28 @@
  <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer">Más información</a>.</p>
         <p>&copy; 2025 Game and Software Solutions</p>
     </footer>
+
+    <div id="cart-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tu Lista de Pedido</h2>
+                <button id="close-modal-btn" class="close-btn">×</button>
+            </div>
+            <div id="cart-items-container" class="modal-body">
+                <!-- Los productos del carrito se añadirán aquí con JS -->
+            </div>
+            <div class="modal-footer">
+                <div class="total-price-container">
+                    <strong>Total Estimado:</strong> <span id="cart-total-price">US$ 0.00</span>
+                </div>
+                <button id="export-excel-btn" class="export-btn">
+                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <!-- Tu script de JavaScript -->
     <script src="script.js"></script>

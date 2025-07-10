@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE AQUÍ TUS PRODUCTOS ---
     // Añade o quita productos de este array.
     // Categorías disponibles: 'computacion', 'hogar', 'libros' (o crea las tuyas).
+
     const products = [
         {
             name: "AMD Procesador de Escritorio Desbloqueado Ryzen 5 7600X de 6 núcleos y 12 hilos",
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             name: "GIGABYTE GeForce RTX 5060 WINDFORCE OC 8G, 128 bits GDDR7, PCIe 5.0, Sistema de Refrigeración WINDFORCE",
             image: "https://m.media-amazon.com/images/I/71ii5ow8slL._AC_SL1500_.jpg",
-            price: "299,99",
+            price: "299,99$",
             originalPrice: "", // Precio original (tachado)
             discount: "",              // Porcentaje de descuento
             offerTag: "",    // Etiqueta de la oferta (rectángulo rojo) //
@@ -145,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             category: "productividad"
         },
         {
-            name: "AMSI MAG A750BN PCIE 5 Fuente de Alimentación - PCIE 5.1 Ready - 80 Plus BronzeCertified 750w - Tamaño compacto - ATX",
+            name: "MSI MAG A750BN PCIE 5 Fuente de Alimentación - PCIE 5.1 Ready - 80 Plus BronzeCertified 750w - Tamaño compacto - ATX",
             image: "https://m.media-amazon.com/images/I/71NjTAXgapL._AC_SL1500_.jpg",
             price: "64,99$",
             originalPrice: "US$ 94,99", // Precio original (tachado)
@@ -186,86 +187,177 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     ];
 
+    // --- 2. VARIABLES Y ELEMENTOS DEL DOM ---
     const productGrid = document.getElementById('product-grid');
     const filterButtons = document.querySelectorAll('.filter-btn');
+    const cartIcon = document.querySelector('.cart-icon-container');
+    const cartCount = document.getElementById('cart-count');
+    const modalOverlay = document.getElementById('cart-modal-overlay');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+    const exportExcelBtn = document.getElementById('export-excel-btn');
+    
+    // La estructura del carrito ahora es: { product: {...}, quantity: N }
+    let cart = []; 
 
-    // --- 2. FUNCIÓN PARA MOSTRAR LOS PRODUCTOS (con la nueva estructura) ---
-const displayProducts = (filteredProducts) => {
-    productGrid.innerHTML = ''; // Limpiar la cuadrícula
-    filteredProducts.forEach(product => {
-        // --- HTML DE LA TARJETA ACTUALIZADO ---
-        const productCard = `
-            <div class="product-card">
-                <img src="${product.image}" alt="${product.name}">
-                <div class="product-info">
-
-                    <h3>${product.name}</h3>
-
-                    ${product.offerTag ? `<div class="offer-tag">${product.offerTag}</div>` : ''}
-                    
-                    <div class="price-container">
-                        ${product.discount ? `<span class="discount-percentage">${product.discount}</span>` : ''}
-                        <span class="final-price">${product.price}</span>
-                        ${product.originalPrice ? `<span class="original-price">Precio: <s>${product.originalPrice}</s></span>` : ''}
+    // --- 3. LÓGICA DE MOSTRAR PRODUCTOS (con input de cantidad) ---
+    const displayProducts = (filteredProducts) => {
+        productGrid.innerHTML = '';
+        filteredProducts.forEach(product => {
+            const productCard = `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        ${product.offerTag ? `<div class="offer-tag">${product.offerTag}</div>` : ''}
+                        <div class="price-container">
+                            ${product.discount ? `<span class="discount-percentage">${product.discount}</span>` : ''}
+                            <span class="final-price">${product.price}</span>
+                            ${product.originalPrice ? `<span class="original-price">Precio: <s>${product.originalPrice}</s></span>` : ''}
+                        </div>
+                        <a href="${product.link}" class="amazon-button" target="_blank" rel="noopener noreferrer">Ver en Amazon <i class="fab fa-amazon"></i></a>
+                        
+                    <!-- NUEVO: Controles para añadir al carrito (versión correcta) -->
+                    <div class="add-to-cart-controls">
+                        <select class="quantity-input" data-product-name="${product.name}">
+                        <option value="1">Cantidad: 1</option>
+                        <option value="2">Cantidad: 2</option>
+                        <option value="3">Cantidad: 3</option>
+                        </select>
+                        <button class="add-to-cart-btn" data-product-name="${product.name}">
+                        <i class="fas fa-cart-plus"></i> Añadir al Pedido
+                        </button>
                     </div>
+                </div>`;
+            productGrid.innerHTML += productCard;
+        });
+    };
+    
+    // --- 4. LÓGICA DEL CARRITO DE COMPRAS (ACTUALIZADA) ---
+    
+    function addToCart(productName, quantity) {
+        const productToAdd = products.find(p => p.name === productName);
+        if (!productToAdd) return;
 
-                    <a href="${product.link}" class="amazon-button" target="_blank" rel="noopener noreferrer">
-                        Ver en Amazon <i class="fab fa-amazon"></i>
-                    </a>
-                </div>
-            </div>
-        `;
-        productGrid.innerHTML += productCard;
-    });
-};
+        const existingItem = cart.find(item => item.product.name === productName);
 
-    // --- 3. LÓGICA DE FILTRADO ---
+        if (existingItem) {
+            // Si el producto ya está en el carrito, solo actualiza la cantidad
+            existingItem.quantity += quantity;
+        } else {
+            // Si es un producto nuevo, lo añade al carrito
+            cart.push({ product: productToAdd, quantity: quantity });
+        }
+        
+        updateCartUI();
+    }
+    
+    function updateCartUI() {
+        // Actualiza el contador con el número total de *artículos*, no de tipos de producto
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+
+        // Limpia y re-renderiza el modal del carrito
+        cartItemsContainer.innerHTML = '';
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Tu lista de pedido está vacía.</p>';
+        } else {
+            cart.forEach(item => {
+                const cartItemHTML = `
+                    <div class="cart-item">
+                        <img src="${item.product.image}" alt="${item.product.name}">
+                        <div class="cart-item-info">
+                            <h4>${item.product.name}</h4>
+                            <div class="cart-item-details">
+                                <p>${item.product.price}</p>
+                                <span class="cart-item-quantity">Cant: ${item.quantity}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                cartItemsContainer.innerHTML += cartItemHTML;
+            });
+        }
+        
+        // Calcula el total, AHORA MULTIPLICANDO POR LA CANTIDAD
+        const total = cart.reduce((sum, item) => {
+            const priceNumber = parseFloat(item.product.price.replace(/[^0-9,.]/g, '').replace(',', '.'));
+            return sum + (isNaN(priceNumber) ? 0 : priceNumber * item.quantity);
+        }, 0);
+        
+        cartTotalPrice.textContent = `$${total.toFixed(2)}`;
+    }
+    
+    function exportToExcel() {
+        if (cart.length === 0) {
+            alert('El carrito está vacío. Añade productos antes de exportar.');
+            return;
+        }
+        
+        // Preparar los datos, AHORA CON LA COLUMNA DE CANTIDAD
+        const dataToExport = cart.map(item => ({
+            'Producto': item.product.name,
+            'Cantidad': item.quantity, // ¡Nueva columna!
+            'Precio Unitario': item.product.price,
+            'Enlace de Amazon': item.product.link
+        }));
+        
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Pedido');
+        XLSX.writeFile(workbook, 'MiPedido_Amazon.xlsx');
+    }
+
+    // --- 5. EVENT LISTENERS (ACTUALIZADO) ---
+
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // Marcar el botón activo
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-
             const category = button.dataset.category;
-            if (category === 'all') {
-                displayProducts(products);
-            } else {
-                const filtered = products.filter(product => product.category === category);
-                displayProducts(filtered);
-            }
+            const filtered = (category === 'all') ? products : products.filter(p => p.category === category);
+            displayProducts(filtered);
         });
     });
 
-    // Mostrar todos los productos al cargar la página
-    displayProducts(products);
+    // Añadir al carrito al HACER CLIC en el botón
+// Añadir al carrito al HACER CLIC en el botón
+productGrid.addEventListener('click', (event) => {
+    // Solo reacciona si el clic fue en el botón de añadir
+    if (event.target.classList.contains('add-to-cart-btn')) {
+        const productName = event.target.dataset.productName;
+        
+        // Busca el menú <select> que corresponde a este botón
+        const quantitySelect = productGrid.querySelector(`.quantity-input[data-product-name="${productName}"]`);
+        
+        // Obtiene el valor seleccionado y lo convierte en número
+        const quantity = parseInt(quantitySelect.value, 10);
+        
+        if (quantity > 0) {
+            addToCart(productName, quantity);
+            
+            // Opcional: Feedback al usuario. Podemos hacer que el botón cambie de color brevemente
+            event.target.innerHTML = '¡Añadido!';
+            event.target.style.backgroundColor = '#1D6F42'; // Verde de éxito
 
-    // --- 4. FUNCIONALIDADES DE PROTECCIÓN BÁSICA ---
-    // Advertencia: Estas medidas son disuasorias, no una seguridad real.
-    // Un usuario avanzado puede saltárselas.
-
-    // Desactivar clic derecho
-    document.addEventListener('contextmenu', event => event.preventDefault());
-
-    // Bloquear teclas de inspección (F12, Ctrl+Shift+I, etc.)
-    document.addEventListener('keydown', event => {
-        if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I') || (event.ctrlKey && event.shiftKey && event.key === 'J') || (event.ctrlKey && event.key === 'U')) {
-            event.preventDefault();
+            setTimeout(() => {
+                event.target.innerHTML = '<i class="fas fa-cart-plus"></i> Añadir al Pedido';
+                event.target.style.backgroundColor = ''; // Vuelve al color original
+            }, 1500);
         }
+    }
+});
+    
+    // Listeners del modal (sin cambios)
+    cartIcon.addEventListener('click', () => modalOverlay.classList.add('active'));
+    closeModalBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
+    modalOverlay.addEventListener('click', (event) => {
+        if (event.target === modalOverlay) modalOverlay.classList.remove('active');
     });
-
-    // Intento de bloquear el debugger (fácil de eludir)
-    (function() {
-        function blockDebugger() {
-            try {
-                (function a(i) {
-                    return ('' + (i/i)).length !== 1 || i % 20 === 0 ? (function() {}).constructor('debugger')() : a(++i);
-                })(0);
-            } catch(e) {
-                setTimeout(blockDebugger, 500);
-            }
-        }
-        // Descomenta la siguiente línea si quieres activar esta "protección".
-        // blockDebugger();
-    })();
-
+    
+    // Listener de exportación (sin cambios)
+    exportExcelBtn.addEventListener('click', exportToExcel);
+    
+    // --- INICIALIZACIÓN ---
+    displayProducts(products);
 });
